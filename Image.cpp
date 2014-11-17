@@ -29,7 +29,7 @@ void ppm_read_from_file(image * im, const char * filename)
   fscanf(file, "P6\n%d %d\n255\n", &im->width, &im->height);
 
   // Allocate memory according to width and height
-  im->pix = (u_char*) malloc(3 * (im->width) * (im->height) * sizeof(im->pix));
+  im->pix = new u_char[3*(im->width)*(im->height)];
 
   // Read the actual image data
   fread(im->pix, 3, (im->width) * (im->height), file);
@@ -71,7 +71,7 @@ void ppm_shrink(image * im, int factor)
   // Compute new image size and allocate memory for the new image
   int new_width   = (im->width) / factor;
   int new_height  = (im->height) / factor;
-  u_char* new_image = (u_char*) malloc(3 * new_width * new_height * sizeof(*new_image));
+  u_char* new_image = new u_char[3 * new_width * new_height];
 
   // Precompute factor^2 (for performance reasons)
   int factor_squared = factor * factor;

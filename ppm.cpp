@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
   // Read file "gargouille.ppm" into image (width and height)
   //--------------------------------------------------------------------------
   
-  image * gargouille = (image *)malloc(sizeof(image));
+  image * gargouille = new image;
   gargouille->pix = NULL;
   ppm_read_from_file(gargouille, "gargouille.ppm");
   
@@ -22,12 +22,13 @@ int main(int argc, char* argv[])
   // write it into "gargouille_BW.ppm"
   //--------------------------------------------------------------------------
   // Copy image into image_bw
-  image * image_bw = (image *)malloc(sizeof(image));
+  image * image_bw = new image;
   image_bw->width  = gargouille->width;
   image_bw->height = gargouille->height;
-  image_bw->pix = (u_char*) malloc(3 * gargouille->width * gargouille->height * sizeof(image_bw->pix));
+  //image_bw->pix = (u_char*) malloc(3 * gargouille->width * gargouille->height * sizeof(image_bw->pix));
+  image_bw->pix = new u_char[3*gargouille->width*gargouille->height];
   
-  memcpy(image_bw->pix, gargouille->pix, 3 * gargouille->width * gargouille->height * sizeof(image_bw->pix));
+  memcpy(image_bw->pix, gargouille->pix, 3 * gargouille->width * gargouille->height * sizeof(*(image_bw->pix)));
 
   // Desaturate image_bw
   ppm_desaturate(gargouille);
@@ -36,8 +37,8 @@ int main(int argc, char* argv[])
   ppm_write_to_file(gargouille,"gargouille_BW.ppm");
 
   // Free the desaturated image
-  free(image_bw->pix);
-  free(image_bw);
+  delete [] image_bw->pix;
+  delete(image_bw);
 
 
   //--------------------------------------------------------------------------
@@ -45,11 +46,11 @@ int main(int argc, char* argv[])
   // write it into "gargouille_small.ppm"
   //--------------------------------------------------------------------------
   // Copy image into image_small
-  image * image_small = (image *)malloc(sizeof(image));
+  image * image_small = new image;
   image_small->width = gargouille->width;
   image_small->height = gargouille->height;
-  image_small->pix = (u_char*) malloc(3 * image_small->width * image_small->height * sizeof(image_small->pix));
-  memcpy(image_small->pix, gargouille->pix, 3 * image_small->width * image_small->height * sizeof(image_small->pix));
+  image_small->pix = new u_char[3 * image_small->width * image_small->height];
+  memcpy(image_small->pix, gargouille->pix, 3 * image_small->width * image_small->height * sizeof(*(image_small->pix)));
 
   // Shrink image_small size 2-fold
   ppm_shrink(image_small, 2);
@@ -61,10 +62,10 @@ int main(int argc, char* argv[])
 
   // Free the not yet freed images
 
-  free(image_small->pix);
-  free(image_small);
-  free(gargouille->pix);
-  free(gargouille);
+  delete [] image_small->pix;
+  delete(image_small);
+  delete [] gargouille->pix;
+  delete(gargouille);
   return 0;
 }
 
