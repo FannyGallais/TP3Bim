@@ -6,6 +6,15 @@
 class Image
 {
  public :
+  //Default constructor
+  Image(void);
+  //copy constructor
+  Image(const Image& model);
+
+  //destructor
+  ~Image(void);
+
+  //Accessors
   int getHeight(void) const; 
   int getWidth(void) const;
   u_char * getPix(void) const;

@@ -4,6 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+Image::Image()
+{
+  width = 0;
+  height = 0;
+  //allocates dynamic memory
+  pix = new u_char[1];
+}
+
+Image::Image(const Image& model)
+{
+  width = model.width;
+  height = model.height;
+  pix = new u_char[3*width*height];
+}
+
+Image::~Image()
+{
+  delete [] pix;
+}
+
 int Image::getHeight(void) const 
 {
   return height;
