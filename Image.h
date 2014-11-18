@@ -6,6 +6,11 @@
 class Image
 {
  public :
+  int getHeight(void) const; 
+  int getWidth(void) const;
+  u_char * getPix(void) const;
+
+
   void ppm_write_to_file(image * im, const char* filename);
   void ppm_read_from_file(image * im, const char* filename);
   void ppm_desaturate(image * im);
