@@ -14,8 +14,8 @@ Image::Image()
 
 Image::Image(const Image& model)
 {
-  width = model.width;
-  height = model.height;
+  width = model.getWidth();
+  height = model.getHeight();
   pix = new u_char[3*width*height];
 }
 
@@ -39,13 +39,13 @@ u_char * Image::getPix(void) const
   return pix;
 }
 
-void ppm_write_to_file(const char* filename)
+void Image::ppm_write_to_file(const char* filename)
 {
   // Open file
   FILE * file = fopen(filename,"wb");
 
   // Write header
-  fprintf(file, "P6\n%d %d\n255\n", width, height);
+  fprintf(file, "P6\n%d %d\n255\n",width,height);
 
   // Write pixels
   fwrite(pix, 3, width*height, file);
@@ -63,7 +63,8 @@ void Image::ppm_read_from_file(const char * filename)
   fscanf(file, "P6\n%d %d\n255\n", &width, &height);
 
   // Allocate memory according to width and height
-  pix = new u_char[3*(width)*(height)];
+  delete [] pix;
+  pix= new u_char[3*(width)*(height)];
 
   // Read the actual image data
   fread(pix, 3, width * height, file);
@@ -94,13 +95,13 @@ void Image::ppm_desaturate(void)
       assert(grey_lvl >= 0 && grey_lvl <=255);
 
       // Set the corresponding pixel's value in new_image
-      memset(&im->pix[3 * (y * im->width + x)], grey_lvl, 3);
+      memset(&pix[3 * (y * width + x)], grey_lvl, 3);
     }
   }
 }
 
 
-void ppm_shrink(image * im, int factor)
+void Image::ppm_shrink(int factor)
 {
   // Compute new image size and allocate memory for the new image
   int new_width   = width / factor;
